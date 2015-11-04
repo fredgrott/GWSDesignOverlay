@@ -1,25 +1,7 @@
 GWSDesignOverlay
 ================
 
-Usage
-=====
 
-I use jitpack to upload my libraries so you put this in your root buildscript:
-
-```groovy
-allprojects {
-        repositories {
-            jcenter()
-            maven { url "https://jitpack.io" }
-        }
-   }
-```
-Than in the module buildscript:
-
-
-```groovy
-compile 'com.github.shareme:GWSDesignOverlay:{latest-release-number}@aar'
-```
 
 
 Target Android API Range

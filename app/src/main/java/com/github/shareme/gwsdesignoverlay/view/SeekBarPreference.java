@@ -26,7 +26,8 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-import com.ms_square.android.design.overlay.R;
+import com.github.shareme.gwsdesignoverlay.R;
+
 
 public class SeekBarPreference extends Preference
         implements OnSeekBarChangeListener {

@@ -23,7 +23,7 @@ public class SettingsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
     }
 
-    Switch mGridSwitch= findViewById(R.id.grid_switch);
+    Switch mGridSwitch= (Switch) findViewById(R.id.grid_switch);
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, SettingsActivity.class);

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
+import com.github.shareme.gwsdesignoverlay.DimenUtil;
 
 
 public class PrefUtil {

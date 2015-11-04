@@ -15,7 +15,6 @@ import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.github.shareme.gwsdesignoverlay.AppUtil;
-import com.github.shareme.gwsdesignoverlay.BuildConfig;
 import com.github.shareme.gwsdesignoverlay.R;
 import com.github.shareme.gwsdesignoverlay.ToastMaster;
 import com.github.shareme.gwsdesignoverlay.task.SafeAsyncTask;
@@ -26,9 +25,11 @@ import com.github.shareme.gwsdesignoverlay.view.ImagePreference;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 
 import timber.log.Timber;
 
+@SuppressWarnings("unused")
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
     private static final int REQUEST_CODE_IMAGE = 10000;
@@ -123,7 +124,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     stream = mAppContext.getContentResolver().openInputStream(params[0]);
                     bitmap = ImageUtil.decodeSampledBitmapFromStream(stream, mImageSize, mImageSize);
                 } catch (FileNotFoundException fe) {
-                    Timber.w("File was not found:" + fe);
+                    Timber.w(MessageFormat.format("File was not found:{0}", fe));
                 } finally {
                     try {
                         if (stream != null) {

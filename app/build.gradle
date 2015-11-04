@@ -104,7 +104,8 @@ android {
         }
 
         release {
-            minifyEnabled true
+            //got cannto hash classes, proguard failure at SettingsActivity onresume getfield
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-matches-android-optimize.pro'
             signingConfig signingConfigs.release
             applicationIdSuffix '.release'

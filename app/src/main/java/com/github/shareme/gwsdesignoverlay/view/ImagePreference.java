@@ -7,7 +7,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.ms_square.android.design.overlay.R;
+import com.github.shareme.gwsdesignoverlay.R;
+
 
 public class ImagePreference extends Preference {
 
