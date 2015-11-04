@@ -3,6 +3,8 @@ apply plugin: 'de.hannesstruss.godot'
 apply plugin: 'hugo'
 apply plugin: 'spoon'
 apply plugin: 'org.moallemi.advanced-build-version'
+apply plugin: 'view-inspector'
+
 
 advancedVersioning {
     nameOptions {
@@ -25,9 +27,11 @@ def appVersionName = advancedVersioning.versionName
 def appVersionCode = advancedVersioning.versionCode
 
 
+
 android {
     compileSdkVersion rootProject.ext.getAt("androidCompileSdkVersion")
     buildToolsVersion rootProject.ext.getAt("androidBuildToolsVersion")
+
 
 
     defaultConfig {
@@ -58,11 +62,13 @@ android {
 
         release {
             //props stored in gradle.properties at userhome .gradle subfolder
+            // for product release and you just substitute the correct vars
+            // otherwise for demo of libs use what is listed
 
-            storeFile file(FREDGROTT_RELEASE_STORE_FILE)
-            storePassword FREDGROTT_RELEASE_STORE_PASSWORD
-            keyAlias FREDGROTT_RELEASE_KEY_ALIAS
-            keyPassword FREDGROTT_RELEASE_KEY_PASSWORD
+            storeFile file('demokey.jks')
+            storePassword 'droiddroid'
+            keyAlias 'dkey'
+            keyPassword 'droiddroid'
         }
 
     }
@@ -87,19 +93,25 @@ android {
         version = rootProject.ext.getAt("jacocoVersion")
     }
 
+
     buildTypes {
         debug{
             debuggable true
             minifyEnabled false
             testCoverageEnabled true
-
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
         }
 
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-matches-android-optimize.pro'
             signingConfig signingConfigs.release
+            applicationIdSuffix '.release'
+            versionNameSuffix '-release'
+
         }
+
     }
 }
 //noinspection GroovyMissingReturnStatement
@@ -119,20 +131,17 @@ spoon {
 
 }
 
-//noinspection GroovyAssignabilityCheck
-configurations.all {
-    resolutionStrategy.force 'com.android.support:support-annotations:22.2.0'
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile rootProject.ext.tddJunitDependencies.junit
     testCompile rootProject.ext.tddJunitDependencies.mockito
+    testCompile rootProject.ext.tddJunitDependencies.assertjJunitCore
     compile rootProject.ext.androidSupportDependencies.appCompat
     debugCompile rootProject.ext.appDependencies.leakcanaryAndroidDC
     releaseCompile rootProject.ext.appDependencies.leakcanaryAndroidNOOPRC
     compile rootProject.ext.appDependencies.timber
-    compile rootProject.ext.appDependencies.timberLint
+
     androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoContrib
     androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoCore
     androidTestCompile rootProject.ext.instrumentedTestDependencies.espressoRunner
@@ -146,17 +155,19 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
+    compile project(":library")
+
 }
 //uncomment to enable
 // androidTest gets a class named SystemAnimations and animations disabled and enabled within
 // the ApplicationTest setUp and tearDown
 // an AndroidManifest.xml stripped of its application tag is
-//task grantAnimationPermission(type: Exec, dependsOn: 'installDebug') { // or install{productFlavour}{buildType}
-//    commandLine "adb shell pm grant $android.defaultConfig.testApplicationId android.permission.SET_ANIMATION_SCALE".split(' ')
-//}
-//
-//tasks.whenTaskAdded { task ->
-//    if (task.name.startsWith('connectedAndroidTest')) {
-//        task.dependsOn grantAnimationPermission
-//    }
-//}
+task grantAnimationPermission(type: Exec, dependsOn: 'installDebug') { // or install{productFlavour}{buildType}
+    commandLine "adb shell pm grant $android.defaultConfig.testApplicationId android.permission.SET_ANIMATION_SCALE".split(' ')
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('connectedAndroidTest')) {
+        task.dependsOn grantAnimationPermission
+    }
+}
